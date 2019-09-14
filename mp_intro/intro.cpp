@@ -10,19 +10,38 @@ void rotate(std::string inputFile, std::string outputFile) {
 	unsigned width = image.width();
 	unsigned height = image.height();
 	unsigned adj_height = height/2;
-	if (height%2==1) { //if odd
-		adj_height -= 1;
+	bool odd_height = false;
+	if (height % 2 == 1) {
+		odd_height = true;
 	}
-	for (unsigned x = 0; x < width; x++) {
-		for (unsigned y = 0; y < adj_height; y++) {
-			unsigned oppo_x = width-x-1;
-			unsigned oppo_y = height-y-1;
 
-			cs225::HSLAPixel & pixel_1 = image.getPixel(x, y);
-			cs225::HSLAPixel & pixel_2 = image.getPixel(oppo_x, oppo_y);
-			cs225::HSLAPixel temp = pixel_1;
-			pixel_1 = pixel_2;
-			pixel_2 = temp;
+	for (unsigned x = 0; x < width; x++) {
+		if (odd_height) {
+			for (unsigned y = 0; y <= adj_height; y++) {
+				if (odd_height && y==adj_height && x>=width/2) {
+					continue;
+				}
+				unsigned oppo_x = width-1-x;
+				unsigned oppo_y = height-1-y;
+
+				cs225::HSLAPixel & pixel_1 = image.getPixel(x, y);
+				cs225::HSLAPixel & pixel_2 = image.getPixel(oppo_x, oppo_y);
+				cs225::HSLAPixel temp = pixel_1;
+				pixel_1 = pixel_2;
+				pixel_2 = temp;
+			}
+		}
+		else {
+			for (unsigned y = 0; y < adj_height; y++) {
+				unsigned oppo_x = width-1-x;
+				unsigned oppo_y = height-1-y;
+
+				cs225::HSLAPixel & pixel_1 = image.getPixel(x, y);
+				cs225::HSLAPixel & pixel_2 = image.getPixel(oppo_x, oppo_y);
+				cs225::HSLAPixel temp = pixel_1;
+				pixel_1 = pixel_2;
+				pixel_2 = temp;
+			}
 		}
 	}
 	image.writeToFile(outputFile);
