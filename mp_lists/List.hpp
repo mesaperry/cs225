@@ -144,7 +144,7 @@ typename List<T>::ListNode * List<T>::split(ListNode * start, int splitPoint) {
 template <typename T>
 void List<T>::waterfall() {
   /// @TODO Graded in MP3.1
-  if (this->size() <= 1) { return; }
+  if (this->size() <= 2) { return; }
   ListNode* curr = head_;
   while (curr->next != tail_ and curr->next != NULL) {
     // remove from list
@@ -157,7 +157,7 @@ void List<T>::waterfall() {
     tail_->next = removed;
     tail_ = removed;
     //next
-    curr = curr->next->next;
+    curr = curr->next;
   }
 }
 
