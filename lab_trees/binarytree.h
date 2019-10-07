@@ -94,7 +94,7 @@ class BinaryTree
         /**
          * @return The root of the binary tree
          */
-        Node* getRoot() const;  
+        Node* getRoot() const;
 
         /**
          * This lab deals with the following six helper functions:
@@ -120,6 +120,8 @@ class BinaryTree
          *  (not creating a flipped copy).
          */
         void mirror();
+
+        void mirror(Node* subRoot);
 
         /**
          * isOrdered() function iterative version
@@ -178,6 +180,9 @@ class BinaryTree
          * Look at the private helpers for height and printLeftToRight
          *  as examples.
          */
+        bool isOrderedRecursive(const Node* subRoot) const;
+        int maxValue(const Node* subRoot) const;
+        int minValue(const Node* subRoot) const;
 
         /**
          * Private helper function for the public height function.

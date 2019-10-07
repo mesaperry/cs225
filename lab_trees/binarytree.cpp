@@ -75,12 +75,22 @@ void BinaryTree<T>::printLeftToRight(const Node* subRoot) const
  * Flips the tree over a vertical axis, modifying the tree itself
  *  (not creating a flipped copy).
  */
-    template <typename T>
+template <typename T>
 void BinaryTree<T>::mirror()
 {
-    //your code here
+    void mirror(Node* root);
 }
 
+template <typename T>
+void BinaryTree<T>::mirror(Node* subRoot)
+{
+    if (subRoot == nullptr) { return; }
+    Node* temp = subRoot->left;
+    subRoot->left = subRoot->right;
+    subRoot->right = temp;
+    mirror(subRoot->left);
+    mirror(subRoot->right);
+}
 
 /**
  * isOrdered() function iterative version
@@ -91,8 +101,15 @@ void BinaryTree<T>::mirror()
 template <typename T>
 bool BinaryTree<T>::isOrderedIterative() const
 {
-    // your code here
-    return false;
+    InorderTraversal<T> tree_traverse = InorderTraversal<T>(this->root);
+	T prev = -1;
+	for (Node * curr : tree_traverse) {
+		if (curr->elem < prev) {
+			return false;
+		}
+		prev = curr->elem;
+	}
+	return true;
 }
 
 /**
@@ -104,10 +121,37 @@ bool BinaryTree<T>::isOrderedIterative() const
 template <typename T>
 bool BinaryTree<T>::isOrderedRecursive() const
 {
-    // your code here
-    return false;
+    return isOrderedRecursive(this->root);
 }
-
+template <typename T>
+bool BinaryTree<T>::isOrderedRecursive(const Node* subRoot) const
+{
+    if (subRoot == NULL) { return true; }
+	if (subRoot->left!=NULL && maxValue(subRoot->left) > subRoot->elem) { return false; }
+	if (subRoot->right!=NULL && minValue(subRoot->right) < subRoot->elem) { return false; }
+	if (!isOrderedRecursive(subRoot->left) || !isOrderedRecursive(subRoot->right)) { return false; }
+	return true;
+}
+template <typename T>
+int BinaryTree<T>::maxValue(const Node* subRoot) const
+{
+	if (subRoot == nullptr) { return -1; }
+	int high = -1;
+	high = std::max(high, subRoot->elem);
+	if (subRoot->left != NULL) { high = std::max(high, subRoot->left->elem); }
+	if (subRoot->right != NULL) { high = std::max(high, subRoot->right->elem); }
+	return high;
+}
+template <typename T>
+int BinaryTree<T>::minValue(const Node* subRoot) const
+{
+	if (subRoot == nullptr) { return -1; }
+	int low = 2147483647;
+	low = std::min(low, subRoot->elem);
+	if (subRoot->left != NULL) { low = std::min(low, subRoot->left->elem); }
+	if (subRoot->right != NULL) { low = std::min(low, subRoot->right->elem); }
+	return low;
+}
 
 /**
  * creates vectors of all the possible paths from the root of the tree to any leaf
@@ -138,4 +182,3 @@ int BinaryTree<T>::sumDistances() const
     // your code here
     return -1;
 }
-
