@@ -183,6 +183,38 @@ void List<T>::reverse() {
 template <typename T>
 void List<T>::reverse(ListNode *& startPoint, ListNode *& endPoint) {
   /// @todo Graded in MP3.2
+  ListNode* oldStart = startPoint;
+  ListNode* oldEnd = endPoint;
+  while (startPoint != endPoint && startPoint->prev != endPoint) {
+    if (startPoint->prev != NULL) { startPoint->prev->next = endPoint; }
+    if (endPoint->next != NULL) { endPoint->next->prev = startPoint; }
+    startPoint->next->prev = endPoint;
+    endPoint->prev->next = startPoint;
+    ListNode* temp1 = startPoint->prev;
+    ListNode* temp2 = startPoint->next;
+    startPoint->prev = endPoint->prev;
+    startPoint->next = endPoint->next;
+    endPoint->prev = temp1;
+    endPoint->next = temp2;
+
+    ListNode* temp = startPoint;
+    startPoint = endPoint;
+    endPoint = temp;
+    startPoint = startPoint->next;
+    endPoint = endPoint->prev;
+  }
+  startPoint = oldEnd;
+  endPoint = oldStart;
+  ListNode* meme = startPoint;
+  int i = 0;
+  while (meme != endPoint) {
+    i++;
+    if (i > 269995 && i < 270070){
+      std::cout << meme->data << std::endl;
+    }
+    meme = meme->next;
+  }
+  std::cout << i << std::endl;
 }
 
 /**
@@ -194,6 +226,18 @@ void List<T>::reverse(ListNode *& startPoint, ListNode *& endPoint) {
 template <typename T>
 void List<T>::reverseNth(int n) {
   /// @todo Graded in MP3.2
+//headadad
+  ListNode* startNode = this->head_;
+  ListNode* endNode = this->head_;
+  while (endNode->next != NULL) {
+    for (int i = 0; i < n-1; i++) {
+      if (endNode->next == NULL) { break; }
+      endNode = endNode->next;
+    }
+    reverse(startNode, endNode);
+    endNode = endNode->next;
+    startNode = endNode;
+  }
 }
 
 
@@ -235,7 +279,41 @@ void List<T>::mergeWith(List<T> & otherList) {
 template <typename T>
 typename List<T>::ListNode * List<T>::merge(ListNode * first, ListNode* second) {
   /// @todo Graded in MP3.2
-  return NULL;
+  ListNode* curr_head;
+  if (first->data < second->data) {
+    curr_head = first;
+    first->prev = NULL;
+    first = first->next;
+  }
+  else {
+    curr_head = second;
+    second->prev = NULL;
+    second = second->next;
+  }
+  ListNode* head = curr_head;
+  while (first != NULL && second != NULL) {
+    if (first->data < second->data) {
+      curr_head->next = first;
+      first->prev = curr_head;
+      curr_head = curr_head->next;
+      first = first->next;
+    }
+    else {
+      curr_head->next = second;
+      second->prev = curr_head;
+      curr_head = curr_head->next;
+      second = second->next;
+    }
+    if (first == NULL) {
+      curr_head->next = second;
+      second->prev = curr_head;
+    }
+    else if (second == NULL) {
+      curr_head->next = first;
+      first->prev = curr_head;
+    }
+  }
+  return head;
 }
 
 /**
