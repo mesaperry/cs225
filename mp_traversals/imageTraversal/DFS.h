@@ -35,4 +35,8 @@ public:
 private:
 	/** @todo [Part 1] */
 	/** add private members here*/
+  PNG& png_;
+  double tolerance_;
+  std::stack to_visit_;
+  std::vector<Point> visited_;
 };

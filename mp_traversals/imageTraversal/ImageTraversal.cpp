@@ -35,6 +35,28 @@ ImageTraversal::Iterator::Iterator() {
   /** @todo [Part 1] */
 }
 
+ImageTraversal::Iterator::Iterator(BFS* search) {
+  search_ = search;
+  while (!search_->to_visit_.empty()) {
+    search_->to_visit_.pop();
+  }
+  while (!search_->visiting_.empty()) {
+    search_->visiting_.pop();
+  }
+  search_->push(start_);
+}
+
+ImageTraversal::Iterator::Iterator(DFS* search) {
+  search_ = search;
+  while (!search_->to_visit_.empty()) {
+    search_->to_visit_.pop();
+  }
+  while (!search_->visiting_.empty()) {
+    search_->visiting_.pop();
+  }
+  search_->push(start_);
+}
+
 /**
  * Iterator increment opreator.
  *
@@ -42,6 +64,28 @@ ImageTraversal::Iterator::Iterator() {
  */
 ImageTraversal::Iterator & ImageTraversal::Iterator::operator++() {
   /** @todo [Part 1] */
+  Point pt = pop();
+  HSLAPixel& pixel1 = png_.getPixel(pt.x,pt.y);
+  if (pt.x<png_.width()-1) {
+    HSLAPixel& pixel2 = png_.getPixel(pt.x+1,pt.y);
+    if (calculateDelta(pixel1,pixel2)>=tolerance_ && std::find(visited_.begin(),visited_.end(),pixel2)!=visited_.end()) {
+      add(Point(pt.x+1,pt.y));
+    }
+  if (pt.y<png_.height()-1) {
+    HSLAPixel& pixel2 = png_.getPixel(pt.x,pt.y+1);
+    if (calculateDelta(pixel1,pixel2)>=tolerance_ && std::find(visited_.begin(),visited_.end(),pixel2)!=visited_.end()) {
+      add(Point(pt.x,pt.y+1));
+    }
+  if (pt.x>0) {
+    HSLAPixel& pixel2 = png_.getPixel(pt.x-1,pt.y);
+    if (calculateDelta(pixel1,pixel2)>=tolerance_ && std::find(visited_.begin(),visited_.end(),pixel2)!=visited_.end()) {
+      add(Point(pt.x-1,pt.y));
+    }
+  if (pt.y>0) {
+    HSLAPixel& pixel2 = png_.getPixel(pt.x,pt.y-1);
+    if (calculateDelta(pixel1,pixel2)>=tolerance_ && std::find(visited_.begin(),visited_.end(),pixel2)!=visited_.end()) {
+      add(Point(pt.x,pt.y-1));
+    }
   return *this;
 }
 
@@ -52,7 +96,7 @@ ImageTraversal::Iterator & ImageTraversal::Iterator::operator++() {
  */
 Point ImageTraversal::Iterator::operator*() {
   /** @todo [Part 1] */
-  return Point(0, 0);
+  return peek();
 }
 
 /**
@@ -62,6 +106,6 @@ Point ImageTraversal::Iterator::operator*() {
  */
 bool ImageTraversal::Iterator::operator!=(const ImageTraversal::Iterator &other) {
   /** @todo [Part 1] */
-  return false;
+  return empty_ != other.empty_;
 }
 

@@ -29,6 +29,8 @@ public:
   class Iterator : std::iterator<std::forward_iterator_tag, Point> {
   public:
     Iterator();
+    Iterator(ImageTraversal* search);
+    Iterator(bool _);
 
     Iterator & operator++();
     Point operator*();
@@ -40,7 +42,8 @@ public:
   private:
     /** @todo [Part 1] */
     /** add private members here if neccesary*/
-
+    ImageTraversal* search_;
+    bool empty_;
   };
 
   /**
@@ -77,5 +80,5 @@ public:
   virtual bool empty() const = 0;
 
 private:
-  static double calculateDelta(const HSLAPixel & p1, const HSLAPixel & p2);  
+  static double calculateDelta(const HSLAPixel & p1, const HSLAPixel & p2);
 };
