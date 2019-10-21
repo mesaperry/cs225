@@ -84,14 +84,13 @@ void AVLTree<K, V>::rebalance(Node*& subtree)
 
         if (balance_r == 1) {
             rotateLeft(subtree);
-            subtree->right->height = subtree->height;
-            subtree->height = subtree->left->height;
             subtree->left->height = subtree->right->height;
         }
         else {
             rotateRightLeft(subtree);
-            subtree->height = subtree->left->height;
-            subtree->left->height = subtree->right->height;
+            subtree->left->height = subtree->height;
+            subtree->height = subtree->right->height;
+            subtree->right->height = subtree->left->height;
         }
     }
     else if (balance == -2) {
@@ -102,14 +101,13 @@ void AVLTree<K, V>::rebalance(Node*& subtree)
 
         if (balance_l == -1) {
             rotateRight(subtree);
-            subtree->left->height = subtree->height;
-            subtree->height = subtree->right->height;
             subtree->right->height = subtree->left->height;
         }
         else {
             rotateLeftRight(subtree);
-            subtree->height = subtree->right->height;
-            subtree->right->height = subtree->left->height;
+            subtree->right->height = subtree->height;
+            subtree->height = subtree->left->height;
+            subtree->left->height = subtree->right->height;
         }
     }
 }
