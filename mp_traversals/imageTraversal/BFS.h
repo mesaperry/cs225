@@ -35,8 +35,8 @@ public:
 private:
   /** @todo [Part 1] */
   /** add private members here*/
-  PNG& png_;
-  double tolerance_;
-  std::queue to_visit_;
-  std::vector<Point> visited_;
+  const PNG& png;
+  Point start;
+  double tolerance;
+  std::queue<Point> visit;
 };

@@ -33,10 +33,10 @@ public:
   bool empty() const;
 
 private:
-	/** @todo [Part 1] */
-	/** add private members here*/
-  PNG& png_;
-  double tolerance_;
-  std::stack to_visit_;
-  std::vector<Point> visited_;
+  /** @todo [Part 1] */
+  /** add private members here*/
+  const PNG& png;
+  Point start;
+  double tolerance;
+  std::stack<Point> visit;
 };
