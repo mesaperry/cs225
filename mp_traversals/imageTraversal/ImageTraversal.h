@@ -47,6 +47,7 @@ public:
     const PNG png;
     double tolerance;
     std::vector<Point> seen;
+  	Point pt_og;
   };
 
   /**

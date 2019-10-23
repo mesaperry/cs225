@@ -1,6 +1,7 @@
 #include "cs225/PNG.h"
 #include <list>
 #include <iostream>
+#include <queue>
 
 #include "colorPicker/ColorPicker.h"
 #include "imageTraversal/ImageTraversal.h"
@@ -18,6 +19,7 @@ using namespace cs225;
  */
 FloodFilledImage::FloodFilledImage(const PNG & png) {
   /** @todo [Part 2] */
+  png_ = png;
 }
 
 /**
@@ -29,6 +31,8 @@ FloodFilledImage::FloodFilledImage(const PNG & png) {
  */
 void FloodFilledImage::addFloodFill(ImageTraversal & traversal, ColorPicker & colorPicker) {
   /** @todo [Part 2] */
+  traversal_ = &traversal;
+  colorPicker_ = &colorPicker;
 }
 
 /**
@@ -53,5 +57,25 @@ void FloodFilledImage::addFloodFill(ImageTraversal & traversal, ColorPicker & co
 Animation FloodFilledImage::animate(unsigned frameInterval) const {
   Animation animation;
   /** @todo [Part 2] */
+  std::queue<Point> pts;
+  for (const Point& pt : *traversal_) {
+    pts.push(pt);
+  }
+  
+  PNG png = png_;
+  int i = 0;
+  while (!pts.empty()) {
+    if (i%frameInterval == 0) {
+      animation.addFrame(png);
+    }
+    const Point& pt = pts.front();
+    pts.pop();
+    HSLAPixel& pixel = png.getPixel(pt.x, pt.y);
+    pixel = colorPicker_->getColor(pt.x, pt.y);
+    i++;
+  }
+  if ((i-1) != int((animation.frameCount()-1)*frameInterval)) {
+    animation.addFrame(png);
+  }
   return animation;
 }

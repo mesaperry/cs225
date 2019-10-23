@@ -40,6 +40,7 @@ ImageTraversal::Iterator::Iterator() {
 
 ImageTraversal::Iterator::Iterator(ImageTraversal* traversal, const PNG png, double tolerance)
   :traversal(traversal), png(png), tolerance(tolerance) {
+	pt_og = traversal->peek();
 }
 
 bool ImageTraversal::Iterator::isEmpty() const {
@@ -55,12 +56,12 @@ bool ImageTraversal::Iterator::isEmpty() const {
  */
 ImageTraversal::Iterator & ImageTraversal::Iterator::operator++() {
   /** @todo [Part 1] */
+	const HSLAPixel& pix1 = png.getPixel(pt_og.x, pt_og.y);
   Point pt = traversal->pop();
   while (std::find(seen.begin(), seen.end(), pt) != seen.end()) {
     pt = traversal->pop();
   }  
   seen.push_back(pt);
-  const HSLAPixel& pix1 = png.getPixel(pt.x, pt.y);
   if (pt.x < png.width()-1) {
     Point pt2 = Point(pt.x+1, pt.y);
   	const HSLAPixel& pix2 = png.getPixel(pt2.x, pt2.y);
