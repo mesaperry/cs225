@@ -4,6 +4,10 @@
 #include "ColorPicker.h"
 #include "MyColorPicker.h"
 
+#include <math.h>
+
+#define PI 3.14159265
+
 using namespace cs225;
 
 /**
@@ -12,5 +16,6 @@ using namespace cs225;
  */
 HSLAPixel MyColorPicker::getColor(unsigned x, unsigned y) {
   /* @todo [Part 3] */
-  return HSLAPixel();
+  double hue = atan(y)*(2/PI) * 31 + 22;
+  return HSLAPixel(hue, 100, 40, 1);
 }
