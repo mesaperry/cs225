@@ -175,15 +175,14 @@ void BTree<K, V>::insert(BTreeNode* subroot, const DataPair& pair)
 
     /* TODO Your code goes here! */
     if (subroot->elements.empty()) {
-        std::cout << "root" << std::endl;
         subroot->elements.push_back(pair);
         subroot->children.push_back(NULL);
         subroot->children.push_back(NULL);
         return;
     }
-    if (subroot->elements[first_larger_idx] == pair) {
-        std::cout << "exists" << std::endl;
-        return; } // exists already
+    /*if (subroot->elements[first_larger_idx] == pair) {
+        std::cout << "exists: " << subroot->elements[first_larger_idx].key << std::endl;
+        return; } // exists already*/
 
     if (subroot->children[first_larger_idx] == NULL) { // leaf
         subroot->elements.insert(subroot->elements.begin()+first_larger_idx, pair);
