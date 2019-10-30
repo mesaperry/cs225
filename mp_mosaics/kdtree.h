@@ -259,6 +259,16 @@ class KDTree
     /**
      * @todo Add your helper functions here.
      */
+    double distance(const Point<Dim>& point1, const Point<Dim>& point2) const;
+
+    int partition(vector<Point<Dim>>& Points, int left, int right, int curDim);
+    void placeMedian(vector<Point<Dim>>& Points, int left, int right, int median, int curDim);
+    KDTreeNode* buildTree(vector<Point<Dim>>& Points, int left, int right, int curDim);
+
+    KDTreeNode* buildCopy(const KDTreeNode* node);
+    void remove(KDTreeNode* node);
+
+    Point<Dim> narrowNearest(const Point<Dim>& query, KDTreeNode* current, int curDim) const;
 };
 
 #include "kdtree.hpp"
