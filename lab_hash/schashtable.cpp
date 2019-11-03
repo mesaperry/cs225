@@ -4,6 +4,7 @@
  */
 
 #include "schashtable.h"
+#include <iostream>
 
 template <class K, class V>
 SCHashTable<K, V>::SCHashTable(size_t tsize)
@@ -49,11 +50,14 @@ SCHashTable<K, V>::SCHashTable(SCHashTable<K, V> const& other)
 template <class K, class V>
 void SCHashTable<K, V>::insert(K const& key, V const& value)
 {
-
     /**
      * @todo Implement this function.
      *
      */
+    unsigned i = hashes::hash(key, size);
+    table[i].emplace_front(key, value);
+    elems++;
+    if (shouldResize()) { resizeTable(); }
 }
 
 template <class K, class V>
@@ -66,7 +70,14 @@ void SCHashTable<K, V>::remove(K const& key)
      * Please read the note in the lab spec about list iterators and the
      * erase() function on std::list!
      */
-    (void) key; // prevent warnings... When you implement this function, remove this line.
+    size_t i = hashes::hash(key, size);
+    for (it = table[i].begin(); it != table[i].end(); it++) {
+        if (it->first == key) {
+            table[i].erase(it);
+            break;
+        }
+    }
+    elems--;
 }
 
 template <class K, class V>
@@ -76,7 +87,13 @@ V SCHashTable<K, V>::find(K const& key) const
     /**
      * @todo: Implement this function.
      */
-
+    size_t i = hashes::hash(key, size);
+    typename std::list<std::pair<K, V>>::iterator it;
+    for (it = table[i].begin(); it != table[i].end(); it++) {
+        if (it->first == key) {
+            return it->second;
+        }
+    }
     return V();
 }
 
@@ -134,4 +151,16 @@ void SCHashTable<K, V>::resizeTable()
      *
      * @hint Use findPrime()!
      */
+    size_t new_size = findPrime(size*2);
+
+    typename std::list<std::pair<K, V>>* new_table = new std::list<std::pair<K, V>>[new_size];
+    for (size_t i = 0; i < size; i++) {
+        for (it = table[i].begin(); it != table[i].end(); it++) {
+            unsigned i = hashes::hash(it->first, new_size);
+            new_table[i].emplace_front(it->first, it->second);
+        }
+    }
+    delete[] table;
+    table = new_table;
+    size = new_size;
 }
