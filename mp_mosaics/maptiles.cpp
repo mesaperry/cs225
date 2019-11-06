@@ -26,9 +26,12 @@ MosaicCanvas* mapTiles(SourceImage const& theSource,
     MosaicCanvas* c = new MosaicCanvas(rows, cols);
 
     vector<Point<3>> points;
+    map<Point<3>, TileImage> tileHash;
     for (TileImage tile : theTiles) {
         const LUVAPixel p = tile.getAverageColor();
-        points.emplace_back(p.l, p.u, p.v);
+        Point<3> pt = Point<3>(p.l, p.u, p.v);
+        points.push_back(pt);
+        tileHash[pt] = tile;
     }
     KDTree<3> tileTree = KDTree<3>(points);
 
@@ -38,14 +41,8 @@ MosaicCanvas* mapTiles(SourceImage const& theSource,
             Point<3> pt = Point<3>(pix1.l, pix1.u, pix1.v);
 
             Point<3> closest = tileTree.findNearestNeighbor(pt);
-            for (TileImage tile : theTiles) {
-                const LUVAPixel pix2 = tile.getAverageColor();
-                if (closest[0]==pix2.l && closest[1]==pix2.u && closest[2]==pix2.v) {      
-                    TileImage* copy = new TileImage(tile);          
-                    c->setTile(i, j, copy);
-                    break;
-                }
-            }
+            TileImage* copy = new TileImage(tileHash[closest]);
+            c->setTile(i, j, copy);
         }
     }
 
