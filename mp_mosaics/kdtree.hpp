@@ -144,10 +144,18 @@ Point<Dim> KDTree<Dim>::narrowNearest(const Point<Dim>& query, KDTreeNode* curre
     
     Point<Dim> best = Point<Dim>();
     if (current->left!=NULL && smallerDimVal(query, current->point, curDim)) {
-        best = narrowNearest(query, current->left, (curDim+1)%Dim);
+		if (current->left != NULL) {
+        	best = narrowNearest(query, current->left, (curDim+1)%Dim);
+		} else {
+        	best = narrowNearest(query, current->right, (curDim+1)%Dim);
+		}
     }
     else {
-        best = narrowNearest(query, current->right, (curDim+1)%Dim);
+		if (current->right != NULL) {
+        	best = narrowNearest(query, current->right, (curDim+1)%Dim);
+		} else {
+        	best = narrowNearest(query, current->left, (curDim+1)%Dim);
+		}
     }
 
     if (shouldReplace(query, best, current->point)) { best = current->point; }
