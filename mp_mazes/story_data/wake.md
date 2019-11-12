@@ -1,0 +1,1 @@
+You wake up. You remember you are not Bill Gates, but rather a measley CS 225 student. You check the time. It is 12:05 AM. You missed the grace period for submitting your MP. Oh well. At least McDonalds is hiring.
