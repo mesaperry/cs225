@@ -9,6 +9,7 @@
 Room::Room()
     : capacity(0), count(0), max_letters(26), letters(NULL), letterCount(0)
 {
+    std::cout << "BBBBBBBBBBBBBBBBBBB" << std::endl;
 }
 
 Room::Room(const std::string& init_name, int init_capacity)
@@ -18,6 +19,7 @@ Room::Room(const std::string& init_name, int init_capacity)
       max_letters(26),
       letterCount(0)
 {
+    std::cout << "AAAAAAAAAAAAAAAAAAAAAAAaa" << std::endl;
     letters = new Letter[max_letters];
 }
 

@@ -193,9 +193,9 @@ void List<T>::reverse(ListNode *& startPoint, ListNode *& endPoint) {
     ListNode* temp1 = startPoint->prev;
     ListNode* temp2 = startPoint->next;
     startPoint->prev = endPoint->prev;
-    startPoint->next = endPoint->next;
+    startPoint->next = endPoint->next; //
     endPoint->prev = temp1;
-    endPoint->next = temp2;
+    endPoint->next = temp2; //
 
     ListNode* temp = startPoint;
     startPoint = endPoint;
@@ -205,16 +205,6 @@ void List<T>::reverse(ListNode *& startPoint, ListNode *& endPoint) {
   }
   startPoint = oldEnd;
   endPoint = oldStart;
-  ListNode* meme = startPoint;
-  int i = 0;
-  while (meme != endPoint) {
-    i++;
-    if (i > 269995 && i < 270070){
-      std::cout << meme->data << std::endl;
-    }
-    meme = meme->next;
-  }
-  std::cout << i << std::endl;
 }
 
 /**
@@ -330,5 +320,24 @@ typename List<T>::ListNode * List<T>::merge(ListNode * first, ListNode* second) 
 template <typename T>
 typename List<T>::ListNode* List<T>::mergesort(ListNode * start, int chainLength) {
   /// @todo Graded in MP3.2
-  return NULL;
+  if (chainLength > 1) {
+    int half = chainLength / 2;
+    int remain = chainLength % 2;
+    ListNode* first = start;
+    ListNode* second = start;
+    for (int i = 0; i < half+remain; i++) {
+      second = second->next;
+    }
+    first = mergesort(first, half);
+    second = mergesort(second, half+remain);
+
+    return merge(first, second);
+  }
+  return this->head_;
 }
+
+
+
+
+
+
