@@ -2,6 +2,7 @@
 
 #include <stdlib.h>
 #include <time.h>
+#include <math.h>
 #include "dsets.h"
 #include "maze.h"
 
@@ -16,6 +17,7 @@ using std::unordered_map;
 using std::cout;
 using std::endl;
 
+#define PI 3.14159265
 
 
 
@@ -56,8 +58,8 @@ void SquareMaze::makeMaze(int width, int height) {
     // delete random walls
     int idx = 0;
     while (dset.size(0) < width*height) {
-        int y = idx / height;
-        int x = idx % height;
+        int y = idx / width;
+        int x = idx % width;
 		int dir = distr(eng);
         if (dir==0 and x!=width-1) { // right
 			if (dset.find(idx) != dset.find(idx+1)) {
@@ -203,12 +205,12 @@ PNG* SquareMaze::drawMaze() const {
     for (int j = 0; j < height_; j++) {
         for (int i = 0; i < width_; i++) {
             if (maze[j][i].right) {
-                for (int k = 0; k < 10; k++) {
+                for (int k = 0; k < 11; k++) {
                     img->getPixel((i+1)*10, j*10+k) = HSLAPixel(0,0,0,1);
                 }
             }
             if (maze[j][i].down) {
-                for (int k = 0; k < 10; k++) {
+                for (int k = 0; k < 11; k++) {
                     img->getPixel(i*10+k, (j+1)*10) = HSLAPixel(0,0,0,1);
                 }
             }
@@ -249,6 +251,35 @@ PNG* SquareMaze::drawMazeWithSolution() {
         img->getPixel(x-5+k, y+5) = HSLAPixel(0,0,1,1);
     }
     return img;
+}
+
+
+int getX(float r, float theta) {
+	return r * cos(theta*PI/180);
+}
+
+int getY(float r, float theta) {
+	return r * sin(theta*PI/180);
+}
+
+PNG* SquareMaze::drawCreativeMaze() {
+	PNG* carte_maze = drawMazeWithSolution();
+
+    int old_width = carte_maze->width();
+    int old_height = carte_maze->height();
+    int new_width = old_height * 4;
+    int new_height = old_height * 4;
+	PNG* creative = new PNG(new_width, new_height);
+	for (int y = 0; y < old_height; y++) {
+        for (int x = 0; x < old_width; x++) {
+            float theta = (float(x)/float(old_width)) * 360 - 90;
+            float r = ((float(y)/float(old_height))/2 + .5) * new_height/2;
+            creative->getPixel(getX(r,theta) + new_width/2, getY(r,theta) + new_height/2) = carte_maze->getPixel(x, y);
+        }
+    }
+
+    delete carte_maze;
+    return creative;
 }
 
 

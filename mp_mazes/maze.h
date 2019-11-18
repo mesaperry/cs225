@@ -15,6 +15,8 @@ class SquareMaze {
         vector<int> solveMaze();
         PNG* drawMaze() const;
         PNG* drawMazeWithSolution();
+        PNG* drawCreativeMaze();
+
     private:
         struct cell {
             bool right;
