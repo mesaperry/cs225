@@ -25,7 +25,40 @@
  * @param startingTokens The number of starting tokens in the game of Nim.
  */
 NimLearner::NimLearner(unsigned startingTokens) : g_(true, true) {
-    /* Your code goes here! */
+  /* Your code goes here! */
+  Vertex o1 = "";
+  Vertex o2 = "";
+  Vertex oo1 = "";
+  Vertex oo2 = "";
+  for (unsigned i = 0; i <= startingTokens; i++) {
+    Vertex curr1 = "p1-" + std::to_string(startingTokens - i);
+    Vertex curr2 = "p2-" + std::to_string(startingTokens - i);
+    g_.insertVertex(curr1);
+    g_.insertVertex(curr2);
+    if (o1 != "") {
+      g_.insertEdge(o1, curr2);
+      g_.insertEdge(o2, curr1);
+      if (oo1 != "") {
+        g_.insertEdge(oo1, curr2);
+        g_.insertEdge(oo2, curr1);
+      }
+    }
+
+    if (!i) {
+      startingVertex_ = curr1;
+    }
+
+    oo1 = o1;
+    oo2 = o2;
+    o1 = curr1;
+    o2 = curr2;
+  }
+
+  for (Edge edge_: g_.getEdges()) {
+    Vertex source = edge_.source;
+    Vertex dest = edge_.dest;
+    g_.setEdgeWeight(source, dest, 0);
+  }
 }
 
 /**
@@ -39,7 +72,26 @@ NimLearner::NimLearner(unsigned startingTokens) : g_(true, true) {
  */
 std::vector<Edge> NimLearner::playRandomGame() const {
   vector<Edge> path;
- /* Your code goes here! */
+  /* Your code goes here! */
+  Vertex curr = startingVertex_;
+  vector<Vertex> options = g_.getAdjacent(curr);
+  while (!options.empty()) {
+    int num = options.size();
+    int choose = rand() % num;
+    Vertex old = curr;
+    curr = options[choose];
+    Edge edge_ = g_.getEdge(old, curr);
+    path.push_back(edge_);
+    char curr_tokens = curr.back();
+
+    options.clear();
+    for (Vertex possibility: g_.getAdjacent(curr)) {
+      if (possibility.back() < curr_tokens) {
+        options.push_back(possibility);
+      }
+    }
+  }
+  
   return path;
 }
 
@@ -60,7 +112,22 @@ std::vector<Edge> NimLearner::playRandomGame() const {
  * @param path A path through the a game of Nim to learn.
  */
 void NimLearner::updateEdgeWeights(const std::vector<Edge> & path) {
- /* Your code goes here! */
+  /* Your code goes here! */
+  Vertex final_state = path.back().dest;
+  int player_won; // 1 if p1 won, -1 if p2 won
+  if (final_state[1] == '2') { player_won = 1; }
+  else { player_won = -1; }
+  for (Edge move: path) {
+    Vertex source = move.source;
+    Vertex dest = move.dest;
+    int player; // 1 if p1's move, -1 if p2's move
+    if (source[1] == '1') { player = 1; }
+    else { player = -1; }
+
+    int weight = g_.getEdgeWeight(source, dest);
+    weight += player * player_won;
+    g_.setEdgeWeight(source, dest, weight);
+  }
 }
 
 /**
